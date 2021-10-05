@@ -1,0 +1,21 @@
+{
+	"name": "uger",
+	"version": "1.0.0",
+	"description": "",
+	"main": "build/uger.js",
+	"directories": {
+		"test": "test"
+	},
+	"type": "module",
+	"scripts": {
+		"test": "node testWeb",
+		"build test": "webpack"
+	},
+	"keywords": [],
+	"author": "engus-maze",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.17.1",
+		"labyrinth-framework": "^0.1.5"
+	}
+}
