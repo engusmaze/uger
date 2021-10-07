@@ -6,7 +6,7 @@
 	"directories": {
 		"test": "test"
 	},
-	"type": "module",
+	"type": "commonjs",
 	"scripts": {
 		"test": "node testWeb",
 		"build test": "webpack"

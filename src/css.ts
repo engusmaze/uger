@@ -52,12 +52,12 @@ class CSSDeclaration extends CSSElement {
 	style: OptionalCSSStyles;
 	/**
 	 * @param selector css selector, for example "p .bold", "#canvas"
-	 * @param style some css properties with values
+	 * @param declaration some css properties with values
 	 */
-	constructor(selector: string, style: OptionalCSSStyles) {
+	constructor(selector: string, declaration: OptionalCSSStyles) {
 		super();
 		this.selector = selector;
-		this.style = style;
+		this.style = declaration;
 		this.update();
 	}
 	update() {
@@ -79,9 +79,15 @@ class CSSDeclaration extends CSSElement {
 
 export function CSS(
 	selector: string,
-	style: OptionalCSSStyles
+	declaration: OptionalCSSStyles
 ): CSSDeclaration {
-	return new CSSDeclaration(selector, style);
+	return new CSSDeclaration(selector, declaration);
+}
+export function Styles(styles: { [selector: string]: OptionalCSSStyles }) {
+	let declarationArr: CSSDeclaration[] = [];
+	for (const [selector, declaration] of Object.entries(styles))
+		declarationArr.push(new CSSDeclaration(selector, declaration));
+	return declarationArr;
 }
 export function CSSImport(importUrl: string): CSSImportElem {
 	return new CSSImportElem(importUrl);

@@ -11,9 +11,10 @@ class Elem {
 	style: CSSStyleDeclaration;
 	children: Elem[] = [];
 	parent: Elem | undefined;
-	constructor(element: HTMLElement) {
+	constructor(element: HTMLElement, properties?: string) {
 		this.element = element;
 		this.style = this.element.style;
+		if (properties !== undefined) this._(properties);
 	}
 	_(properties: string) {
 		for (const property of properties.split(" ")) {
@@ -30,9 +31,12 @@ class Elem {
 			}
 		}
 	}
-	add<K extends keyof HTMLElementTagNameMap>(tagName: K) {
-		let e = new Elem(document.createElement(tagName));
-		this.element.appendChild(e.element);
+	add<K extends keyof HTMLElementTagNameMap>(
+		tagName: K,
+		properties?: string
+	) {
+		let e = new Elem(document.createElement(tagName), properties);
+		this.appendChild(e);
 		return e;
 	}
 	styles(css: OptionalCSSStyles): this {
@@ -40,11 +44,14 @@ class Elem {
 		return this;
 	}
 	removeChild(child: Elem) {
-		if (this.children.includes(child))
+		if (this.children.includes(child)) {
+			child.element.remove();
 			this.children.splice(this.children.indexOf(child), 1);
+		}
 	}
 	remove() {
 		if (this.parent !== undefined) this.parent.removeChild(this);
+		else this.element.remove();
 	}
 
 	id(id: string): this {
@@ -71,12 +78,38 @@ class Elem {
 		return this.element.innerText;
 	}
 
+	appendChild(elem: Elem) {
+		elem.parent = this;
+		this.element.appendChild(elem.element);
+		this.children.push(elem);
+	}
 	on<K extends keyof HTMLElementEventMap>(
 		type: K,
-		listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+		listener: (ev: HTMLElementEventMap[K], elem: Elem) => any,
 		options?: boolean | AddEventListenerOptions
 	): this {
-		this.element.addEventListener(type, listener, options);
+		const self = this;
+		this.element.addEventListener(
+			type,
+			(ev) => {
+				listener(ev, self);
+			},
+			options
+		);
+		return this;
+	}
+	once<K extends keyof HTMLElementEventMap>(
+		type: K,
+		listener: (ev: HTMLElementEventMap[K], elem: Elem) => any
+	): this {
+		const self = this;
+		this.element.addEventListener(
+			type,
+			(ev) => {
+				listener(ev, self);
+			},
+			{ once: true }
+		);
 		return this;
 	}
 }

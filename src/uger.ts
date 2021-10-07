@@ -1,3 +1,3 @@
-import { CSS, CSSImport } from "./css";
+import { CSS, CSSImport, Styles } from "./css";
 import { body } from "./elem";
-export { CSS, CSSImport, body };
+export { CSS, CSSImport, Styles, body };

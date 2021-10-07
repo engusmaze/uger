@@ -3,7 +3,7 @@ const path = require("path");
 module.exports = {
 	mode: "development",
 	entry: {
-		tests: "./tests.js",
+		tests: "./build/tests.js",
 	},
 	output: {
 		filename: "[name].js",
